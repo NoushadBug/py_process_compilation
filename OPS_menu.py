@@ -11,23 +11,16 @@ full_name = getpass.getuser()
 root = ttk.Window()
 root.title("Process Compilation Tool")
 
+
 def create_main_frame():
     global main_frame
 
     # Create main frame
-    main_frame = ttk.Frame(root, padding=10)
+    main_frame = ttk.Frame(root, padding=1)
     main_frame.pack(fill=tk.BOTH, expand=True)
 
-    # Create menu bar
-    menu_bar = ttk.Menu(root)
-    root.config(menu=menu_bar)
-
-    # Create config editor menu
-    config_editor_menu = ttk.Menu(menu_bar, tearoff=0)
-    menu_bar.add_cascade(label="Config", menu=config_editor_menu)
 
     # Add menu items to input menu
-    config_editor_menu.add_command(label="Edit Config", command=create_config_editor_frame)
 
 
     # Add the title
@@ -85,7 +78,7 @@ def show_output(cmd):
     output_text.tag_configure("danger", foreground="red")
     output_text.configure(yscrollcommand=scrollbar.set)
 
-    # Redirect stdout to the text widget
+    # Redirect stdout to the text widgetx
     sys.stdout = TextRedirector(output_text, "stdout")
 
     # Call the command function and print the output
@@ -115,26 +108,55 @@ def create_config_editor_frame():
     # Save the new frame to the root object
     root.output_frame = config_frame
 
+    # Read values from config.txt if available
+    inputs = {}
+    try:
+        with open("config.txt", "r") as f:
+            for line in f:
+                key, value = line.strip().split("=")
+                inputs[key] = value
+    except FileNotFoundError:
+        pass
+
     # Create input widgets
-    label1 = tk.Label(config_frame, text="Input 1")
-    entry1 = tk.Entry(config_frame)
+    input_widgets = []
+    for key in inputs.keys():
+        label = tk.Label(config_frame, text=key)
+        entry = tk.Entry(config_frame)
+        entry.insert(0, inputs[key])
+        input_widgets.append((label, entry))
 
-    label2 = tk.Label(config_frame, text="Input 2")
-    entry2 = tk.Entry(config_frame)
+    # Create "Add" button to add new input fields
+    def add_input():
+        label = tk.Label(config_frame, text="Input " + str(len(input_widgets) + 1))
+        entry = tk.Entry(config_frame)
+        input_widgets.append((label, entry))
+        label.pack(padx=5, pady=5, anchor=tk.W)
+        entry.pack(padx=5, pady=5)
 
-    button_save = tk.Button(config_frame, text="Save", command=save_inputs(entry1, entry2))
+    add_button = tk.Button(config_frame, text="Add", command=add_input)
+    add_button.pack(padx=5, pady=5)
+
+    # Create "Save" button to save inputs to file
+    def save_inputs():
+        with open("config.txt", "w") as f:
+            for label, entry in input_widgets:
+                key = label.cget("text")
+                value = entry.get()
+                f.write(key + "=" + value + "\n")
+
+    save_button = tk.Button(config_frame, text="Save", command=save_inputs)
+    save_button.pack(padx=5, pady=5)
 
     # Layout input widgets
-    label1.grid(row=0, column=0, padx=5, pady=5, sticky="w")
-    entry1.grid(row=0, column=1, padx=5, pady=5)
+    for label, entry in input_widgets:
+        label.pack(padx=5, pady=5, anchor=tk.W)
+        entry.pack(padx=5, pady=5)
 
-    label2.grid(row=1, column=0, padx=5, pady=5, sticky="w")
-    entry2.grid(row=1, column=1, padx=5, pady=5)
+    # Focus on the first input field
+    if input_widgets:
+        input_widgets[0][1].focus_set()
 
-    button_save.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
-
-    # Focus on the first entry widget
-    entry1.focus_set()
 
 
 def save_inputs(entry1, entry2):
@@ -162,6 +184,16 @@ def save_inputs(entry1, entry2):
 
 # Create main frame
 create_main_frame()
+
+
+# Create menu bar
+menu_bar = ttk.Menu(root)
+root.config(menu=menu_bar)
+
+# Create config editor menu
+config_editor_menu = ttk.Menu(menu_bar, tearoff=0)
+menu_bar.add_cascade(label="Config", menu=config_editor_menu)
+config_editor_menu.add_command(label="Edit Config", command=create_config_editor_frame)
 
 # Center window on screen
 root.update_idletasks()

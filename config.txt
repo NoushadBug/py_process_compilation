@@ -1,2 +1,3 @@
-input1=
-input2=
+input1=noushad
+input2=ybiuuu
+Input 3=
