@@ -43,7 +43,7 @@ def open_folders():
     # Add your code here to open folders
 
 def delete_folder_contents():
-    print("Deleting folder contents...")
+    print("LOG:: Deleting folder contents...")
     # List of folders to delete contents from
     folders_to_clear = [   
         'I:/streleases/automation/processed-images',
@@ -53,17 +53,14 @@ def delete_folder_contents():
         'I:/Extractor/extract_folder',
         'I:/tempLRimport'
     ]
-    print("LOG:: Deleting folder contents...")
-
-    print("Deleted folder contents:\n")
 
     # Loop through each folder
     for folder in folders_to_clear:
-        print(folder + "\n")
+        print("INFO:: Deleting "+folder)
 
         # Check if folder exists
         if not os.path.exists(folder):
-            print("\tFolder does not exist\n")
+            print("ERROR:: Folder does not exist\n")
             continue
 
         # Loop through files in folder and delete them
@@ -72,13 +69,13 @@ def delete_folder_contents():
             try:
                 if os.path.isfile(file_path) or os.path.islink(file_path):
                     os.unlink(file_path)
-                    print("LOG::\tDeleted file: " + file_name + "\n")
+                    print("LOG:: Deleted file: " + file_name + "\n")
                 elif os.path.isdir(file_path):
                     shutil.rmtree(file_path)
-                    print("LOG::\tDeleted directory: " + file_name + "\n")
+                    print("LOG:: Deleted directory: " + file_name + "\n")
             except Exception as e:
-                print("LOG::\tFailed to delete: " + file_name + "\n")
-                print("LOG::\tError message: " + str(e) + "\n")
-    print("SUCCESS:: Folder contents deleted.")
+                print("LOG:: Failed to delete: " + file_name + "\n")
+                print("LOG:: Error message: " + str(e) + "\n")
+    print("SUCCESS:: Task Completed.")
 
 
