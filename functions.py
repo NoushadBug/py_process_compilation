@@ -1,58 +1,98 @@
 from TextRedirector import *
 import time, webbrowser, shutil
 import os
+import subprocess
+
+def get_config_value(key):
+    with open('config.txt', 'r') as file:
+        for line in file:
+            if line.startswith(key):
+                return line.split('=')[1].strip()
+    return ''
 
 def open_prompt_creator():
-    print("Opening prompt creator...")
-    url = "https://docs.google.com/spreadsheets/d/1yx2szVvLrSoQKk-acKZ2Gpw1ETpYlXj7aHA2fsRWuJk/edit?fbclid=IwAR2MywzMaqBNbeKKHjEbuHf9FJ9bvcKktHLYs_Ljig4QBG0-YeDDxTXSuaY#gid=0"
-    webbrowser.open(url)
+    try:
+        print("LOG:: Opening prompt creator...")
+        url = get_config_value('promptSheet')
+        webbrowser.open(url)
+        print("SUCCESS:: Prompt creator opened!")
+    except Exception as e:
+        print("ERROR:: Could not open prompt creator due to:", e)
 
 def open_MJ():
-    print("LOG:: Opening MJ...")
-    print("INFO:: I have added a time wait to test how the home button will wait until the whole process is completed")
-    time.sleep(5)  # Add a delay of 5 seconds
-    print("SUCCESS:: MJ profile opened!")
-    # Add your code here to open MJ
+    try:
+        print("LOG:: Opening MJ...")
+        url = get_config_value('mjURL')
+        webbrowser.open(url)
+        print("INFO:: MJ Opened in browser")
+        time.sleep(10)
+        print("LOG:: Running bat file...")
+        subprocess.call([get_config_value('mjbatdirectory')])
+        print("INFO:: Bat file completed successfully")
+        print("SUCCESS:: process completed!")
+    except FileNotFoundError:
+        print("ERROR:: directory "+get_config_value('mjbatdirectory')+" not found")
+
 
 def open_MJ_profile():
-    print("Opening MJ profile...")
-    # Add your code here to open MJ profile
+    try:
+        print("LOG:: Opening MJ profile...")
+        url = get_config_value('mjProfile')
+        webbrowser.open(url)
+        print("SUCCESS:: MJ profile opened!")
+    except Exception as e:
+        print("ERROR:: Could not open MJ profile due to:", e)
 
 def run_extractor():
-    print("Running Extractor...")
-    # Add your code here to run the extractor
+    try:
+        print("LOG:: Running Extractor bat file...")
+        subprocess.call([get_config_value('extractorDirectory')])
+        print("INFO:: Bat file completed successfully")
+        print("SUCCESS:: process completed!")
+    except FileNotFoundError:
+        print("ERROR:: directory "+get_config_value('extractorDirectory')+" not found")
 
 def run_gigapixel():
-    print("Running Gigapixel...")
-    # Add your code here to run Gigapixel
+    try:
+        print("LOG:: Running Gigapixel...")
+        exe_path = get_config_value('gigapixelDirectory')
+        subprocess.Popen(exe_path)
+        print("SUCCESS: Gigapixel AI app opened!")
+    except FileNotFoundError:
+        print("ERROR:: Directory "+get_config_value('gigapixelDirectory')+" not found")
 
 def process_in_lightroom():
-    print("Processing in Lightroom...")
-    # Add your code here to process in Lightroom
+    try:
+        print("LOG:: Running Lightroom...")
+        exe_path = get_config_value('lightroomDirectory')
+        subprocess.Popen(exe_path)
+        print("SUCCESS: Lightroom app opened!")
+    except FileNotFoundError:
+        print("ERROR:: Directory "+get_config_value('lightroomDirectory')+" not found")
 
 def property_releases():
-    print("Running Property Releases...")
-    # Add your code here to run the property releases
+    try:
+        print("LOG:: Running Property Release bat file...")
+        subprocess.call([get_config_value('propertyDirectory')])
+        print("INFO:: Bat file completed successfully")
+        print("SUCCESS:: Property Release process completed!")
+    except FileNotFoundError:
+        print("ERROR:: directory "+get_config_value('propertyDirectory')+" not found")
 
 def run_WP2JPG():
-    print("Running WP2JPG...")
-    # Add your code here to run WP2JPG
+    try:
+        print("LOG:: Running WP2JPG...")
+        exe_path = get_config_value('wp2jpgDirectory')
+        subprocess.Popen(exe_path)
+        print("SUCCESS: WP2JPG app opened!")
+    except FileNotFoundError:
+        print("ERROR:: Directory "+get_config_value('wp2jpgDirectory')+" not found")
 
-def open_folders():
-    print("Opening folders...")
-    # Add your code here to open folders
 
 def delete_folder_contents():
     print("LOG:: Deleting folder contents...")
-    # List of folders to delete contents from
-    folders_to_clear = [   
-        'I:/streleases/automation/processed-images',
-        'I:/streleases/automation/output-releases',
-        'I:/streleases/automation/images',
-        'I:/Adobe Stock',
-        'I:/Extractor/extract_folder',
-        'I:/tempLRimport'
-    ]
+    # Get folders_to_clear list from config.txt
+    folders_to_clear = get_config_value('foldersToClear').split(',')
 
     # Loop through each folder
     for folder in folders_to_clear:
@@ -77,5 +117,4 @@ def delete_folder_contents():
                 print("LOG:: Failed to delete: " + file_name + "\n")
                 print("LOG:: Error message: " + str(e) + "\n")
     print("SUCCESS:: Task Completed.")
-
 

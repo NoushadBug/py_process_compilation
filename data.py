@@ -12,6 +12,6 @@ button_data = {
     "Lightroom": {"bootstyle": PRIMARY, "command": process_in_lightroom},
     "Property Releases": {"bootstyle": PRIMARY, "command": property_releases},
     "WP2JPG": {"bootstyle": INFO, "command": run_WP2JPG},
-    "Open Folders": {"bootstyle": INFO, "command": open_folders},
-    "Delete Folder Contents": {"bootstyle": PRIMARY, "command": delete_folder_contents},
+    # "Open Folders": {"bootstyle": INFO, "command": open_folders},
+    "Delete Folder Contents": {"bootstyle": INFO, "command": delete_folder_contents},
 }
