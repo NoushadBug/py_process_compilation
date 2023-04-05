@@ -7,7 +7,7 @@ def get_config_value(key):
     with open('config.txt', 'r') as file:
         for line in file:
             if line.startswith(key):
-                return line.split('=')[1].strip()
+                return line.split('= ')[1].strip()
     return ''
 
 def open_prompt_creator():
@@ -38,6 +38,7 @@ def open_MJ_profile():
     try:
         print("LOG:: Opening MJ profile...")
         url = get_config_value('mjProfile')
+        print("LOG:: url: "+ url)
         webbrowser.open(url)
         print("SUCCESS:: MJ profile opened!")
     except Exception as e:

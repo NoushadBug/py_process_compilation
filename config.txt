@@ -1,11 +1,11 @@
-promptSheet=https://docs.google.com/spreadsheets/d/1yx2szVvLrSoQKk-acKZ2Gpw1ETpYlXj7aHA2fsRWuJk/edit?fbclid=IwAR2MywzMaqBNbeKKHjEbuHf9FJ9bvcKktHLYs_Ljig4QBG0-YeDDxTXSuaY#gid=0
-mjProfile=https://www.midjourney.com/home/?callbackUrl=%2Fapp%2Fjobs%2F536ee4f3-bcdb-4c88-a234-ef98bc8e0b34%2F
-mjURL=https://discord.com/channels/@me/994955673651654676
-mjbatdirectory=I:\mjauto\run.bat
-extractorDirectory=I:\Extractor\run.bat
-gigapixelDirectory=C:\Program Files\Topaz Labs LLC\Topaz Gigapixel AI\Topaz Gigapixel AI.exe
-lightroomDirectory=C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Adobe Lightroom Classic
-propertyDirectory=I:\streleases\automation\run.bat
-wp2jpgDirectory=C:\Program Files (x86)\Batch Word to JPG Converter\Word2JPG.exe
-foldersToClear=I:/streleases/automation/processed-images, I:/streleases/automation/output-releases, I:/streleases/automation/images, I:/Adobe Stock, I:/Extractor/extract_folder, I:/tempLRimport
+promptSheet= https://docs.google.com/spreadsheets/d/1yx2szVvLrSoQKk-acKZ2Gpw1ETpYlXj7aHA2fsRWuJk/edit?fbclid= IwAR2MywzMaqBNbeKKHjEbuHf9FJ9bvcKktHLYs_Ljig4QBG0-YeDDxTXSuaY#gid=0
+mjProfile= https://www.midjourney.com/home/?callbackUrl=%2Fapp%2Fjobs%2F536ee4f3-bcdb-4c88-a234-ef98bc8e0b34%2F
+mjURL= https://discord.com/channels/@me/994955673651654676
+mjbatdirectory= I:\mjauto\run.bat
+extractorDirectory= I:\Extractor\run.bat
+gigapixelDirectory= C:\Program Files\Topaz Labs LLC\Topaz Gigapixel AI\Topaz Gigapixel AI.exe
+lightroomDirectory= C:\Program Files\Adobe\Adobe Lightroom Classic\Lightroom.exe
+propertyDirectory= I:\streleases\automation\run.bat
+wp2jpgDirectory= C:\Program Files (x86)\Batch Word to JPG Converter\Word2JPG.exe
+foldersToClear= I:/streleases/automation/processed-images, I:/streleases/automation/output-releases, I:/streleases/automation/images, I:/Adobe Stock, I:/Extractor/extract_folder, I:/tempLRimport
 
