@@ -27,7 +27,10 @@ def open_MJ():
         print("INFO:: MJ Opened in browser")
         time.sleep(10)
         print("LOG:: Running bat file...")
-        subprocess.call([get_config_value('mjbatdirectory')])
+        fh = os.popen(get_config_value('mjbatdirectory'))
+        output = fh.read()
+        print(output)
+        fh.close()
         print("INFO:: Bat file completed successfully")
         print("SUCCESS:: process completed!")
     except FileNotFoundError:
@@ -47,7 +50,10 @@ def open_MJ_profile():
 def run_extractor():
     try:
         print("LOG:: Running Extractor bat file...")
-        subprocess.call([get_config_value('extractorDirectory')])
+        fh = os.popen(get_config_value('extractorDirectory'))
+        output = fh.read()
+        print(output)
+        fh.close()
         print("INFO:: Bat file completed successfully")
         print("SUCCESS:: process completed!")
     except FileNotFoundError:
@@ -74,11 +80,15 @@ def process_in_lightroom():
 def property_releases():
     try:
         print("LOG:: Running Property Release bat file...")
-        subprocess.call([get_config_value('propertyDirectory')])
-        print("INFO:: Bat file completed successfully")
-        print("SUCCESS:: Property Release process completed!")
+        fh = os.popen(get_config_value('propertyDirectory'))
+        output = fh.read()
+        print(output)
+        fh.close()
+        print("INFO:: Bat file started")
+        print("SUCCESS:: Property Release process started!")
     except FileNotFoundError:
         print("ERROR:: directory "+get_config_value('propertyDirectory')+" not found")
+
 
 def run_WP2JPG():
     try:
@@ -91,9 +101,13 @@ def run_WP2JPG():
 
 
 def delete_folder_contents():
+
+    # button9= GUI.button9
+    # button9.configure(bg="#FF0000") # change the background color of button7 to red
+
     print("LOG:: Deleting folder contents...")
     # Get folders_to_clear list from config.txt
-    folders_to_clear = get_config_value('foldersToClear').split(',')
+    folders_to_clear = get_config_value('foldersToClear').split(', ')
 
     # Loop through each folder
     for folder in folders_to_clear:
@@ -105,17 +119,23 @@ def delete_folder_contents():
             continue
 
         # Loop through files in folder and delete them
-        for file_name in os.listdir(folder):
-            file_path = os.path.join(folder, file_name)
-            try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
+        for root, dirs, files in os.walk(folder):
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                try:
                     os.unlink(file_path)
                     print("LOG:: Deleted file: " + file_name + "\n")
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-                    print("LOG:: Deleted directory: " + file_name + "\n")
-            except Exception as e:
-                print("LOG:: Failed to delete: " + file_name + "\n")
-                print("LOG:: Error message: " + str(e) + "\n")
-    print("SUCCESS:: Task Completed.")
+                except Exception as e:
+                    print("LOG:: Failed to delete: " + file_name + "\n")
+                    print("LOG:: Error message: " + str(e) + "\n")
 
+            for dir_name in dirs:
+                dir_path = os.path.join(root, dir_name)
+                try:
+                    shutil.rmtree(dir_path)
+                    print("LOG:: Deleted directory: " + dir_name + "\n")
+                except Exception as e:
+                    print("LOG:: Failed to delete: " + dir_name + "\n")
+                    print("LOG:: Error message: " + str(e) + "\n")
+
+    print("SUCCESS:: Task Completed.")
