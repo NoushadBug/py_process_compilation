@@ -15,7 +15,6 @@ root.title("Process Compilation Tool")
 
 def create_main_frame():
     global main_frame
-
     # Create main frame
     main_frame = ttk.Frame(root, padding=1)
     main_frame.pack(fill=tk.BOTH, expand=True)
@@ -41,13 +40,52 @@ def create_main_frame():
     button_frame = ttk.Labelframe(main_frame, text="Automation Actions")
     button_frame.pack(side=tk.TOP, pady=10, fill=tk.X)
 
+    global button_dict
+    button_dict = {}
     # Create buttons using a loop
     for i, (button_text, button_opts) in enumerate(button_data.items()):
         button = ttk.Button(button_frame, text=button_text, **button_opts, width=20)
-        button.configure(command=lambda cmd=button_opts["command"]: show_output(cmd))
+        if button_text == btn_name['reset_process']:
+            button.configure(command=lambda cmd=button_opts["command"]: fetch_main_window(cmd))
+        else:
+            button.configure(command=lambda cmd=button_opts["command"]: show_output(cmd))
         button.grid(row=i//2, column=i%2, padx=5, pady=5)
-    
+        button_dict[button_text] = button
+
+    update_button_style()
     return main_frame
+
+
+def update_button_style():
+    # Read the contents of the file
+    with open("server.txt", "r") as f:
+        contents = f.readlines()
+
+    # Get the success and error lists from the file
+    success_list = [s.strip() for s in contents[0].split(":")[1].split(",") if s.strip()]
+    error_list = [s.strip() for s in contents[1].split(":")[1].split(",") if s.strip()]
+
+    # Loop through each button and update its style based on its status
+    for button_name, button in button_dict.items():
+        if button_name in success_list:
+            style = ttk.Style()
+            style.configure('Custom.TButton', background='#4CAF50', hovercolor='#4CAF50')
+            button.configure(style='Custom.TButton')
+            button.configure(text="✔ "+button.cget("text"))
+        elif button_name in error_list:
+            style = ttk.Style()
+            style.configure('CustomError.TButton', background='#F44336', hovercolor='#F44336')
+            button.configure(style='CustomError.TButton')
+            button.configure(text="✖ "+button.cget("text"))
+
+
+def fetch_main_window(cmd):
+
+    # Clear the old frame if it exists
+    main_frame.destroy()
+    # Call the command function and print the output
+    cmd()
+    create_main_frame()
 
 def show_output(cmd):
 

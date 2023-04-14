@@ -1,6 +1,6 @@
 from TextRedirector import *
 import time, webbrowser, shutil
-import os
+import data, os
 import subprocess
 
 def get_config_value(key):
@@ -11,6 +11,7 @@ def get_config_value(key):
     return ''
 
 def open_prompt_creator():
+    btn_name = data.btn_name['pmt']
     try:
         print("LOG:: Opening prompt creator...")
         url = get_config_value('promptSheet')
@@ -18,8 +19,10 @@ def open_prompt_creator():
         print("SUCCESS:: Prompt creator opened!")
     except Exception as e:
         print("ERROR:: Could not open prompt creator due to:", e)
+    setProcessStatus(btn_name, "SUCCESS")
 
 def open_MJ():
+    btn_name = data.btn_name['mj']
     try:
         print("LOG:: Opening MJ...")
         url = get_config_value('mjURL')
@@ -35,9 +38,10 @@ def open_MJ():
         print("SUCCESS:: process completed!")
     except FileNotFoundError:
         print("ERROR:: directory "+get_config_value('mjbatdirectory')+" not found")
-
+    setProcessStatus(btn_name, "SUCCESS")
 
 def open_MJ_profile():
+    btn_name = data.btn_name['mj_profile']
     try:
         print("LOG:: Opening MJ profile...")
         url = get_config_value('mjProfile')
@@ -46,8 +50,10 @@ def open_MJ_profile():
         print("SUCCESS:: MJ profile opened!")
     except Exception as e:
         print("ERROR:: Could not open MJ profile due to:", e)
+    setProcessStatus(btn_name, "SUCCESS")
 
 def run_extractor():
+    btn_name = data.btn_name['extractor']
     try:
         print("LOG:: Running Extractor bat file...")
         fh = os.popen(get_config_value('extractorDirectory'))
@@ -58,8 +64,10 @@ def run_extractor():
         print("SUCCESS:: process completed!")
     except FileNotFoundError:
         print("ERROR:: directory "+get_config_value('extractorDirectory')+" not found")
+    setProcessStatus(btn_name, "SUCCESS")
 
 def run_gigapixel():
+    btn_name = data.btn_name['gigapixel']
     try:
         print("LOG:: Running Gigapixel...")
         exe_path = get_config_value('gigapixelDirectory')
@@ -68,7 +76,10 @@ def run_gigapixel():
     except FileNotFoundError:
         print("ERROR:: Directory "+get_config_value('gigapixelDirectory')+" not found")
 
+    setProcessStatus(btn_name, "SUCCESS")
+
 def process_in_lightroom():
+    btn_name = data.btn_name['lightroom']
     try:
         print("LOG:: Running Lightroom...")
         exe_path = get_config_value('lightroomDirectory')
@@ -77,7 +88,10 @@ def process_in_lightroom():
     except FileNotFoundError:
         print("ERROR:: Directory "+get_config_value('lightroomDirectory')+" not found")
 
+    setProcessStatus(btn_name, "SUCCESS")
+
 def property_releases():
+    btn_name = data.btn_name['property_releases']
     try:
         print("LOG:: Running Property Release bat file...")
         fh = os.popen(get_config_value('propertyDirectory'))
@@ -88,9 +102,11 @@ def property_releases():
         print("SUCCESS:: Property Release process started!")
     except FileNotFoundError:
         print("ERROR:: directory "+get_config_value('propertyDirectory')+" not found")
-
+    
+    setProcessStatus(btn_name, "SUCCESS")
 
 def run_WP2JPG():
+    btn_name = data.btn_name['wp2jpg']
     try:
         print("LOG:: Running WP2JPG...")
         exe_path = get_config_value('wp2jpgDirectory')
@@ -98,13 +114,11 @@ def run_WP2JPG():
         print("SUCCESS: WP2JPG app opened!")
     except FileNotFoundError:
         print("ERROR:: Directory "+get_config_value('wp2jpgDirectory')+" not found")
-
+    
+    setProcessStatus(btn_name, "SUCCESS")
 
 def delete_folder_contents():
-
-    # button9= GUI.button9
-    # button9.configure(bg="#FF0000") # change the background color of button7 to red
-
+    btn_name = data.btn_name['delete_contents']
     print("LOG:: Deleting folder contents...")
     # Get folders_to_clear list from config.txt
     folders_to_clear = get_config_value('foldersToClear').split(', ')
@@ -139,3 +153,38 @@ def delete_folder_contents():
                     print("LOG:: Error message: " + str(e) + "\n")
 
     print("SUCCESS:: Task Completed.")
+    setProcessStatus(btn_name, "SUCCESS")
+
+def reset():
+    # btn_name = data.btn_name['reset_process']
+    with open("server.txt", "w") as f:
+        f.write("Success:\n")
+        f.write("Error:\n")
+    
+    # setProcessStatus(btn_name, "SUCCESS")
+
+def setProcessStatus(button_name, status):
+    # Create the file if it doesn't exist
+    if not os.path.exists("server.txt"):
+        with open("server.txt", "w") as f:
+            f.write("Success:\n")
+            f.write("Error:\n")
+    
+    # Read the contents of the file
+    with open("server.txt", "r") as f:
+        contents = f.readlines()
+    
+    # Get the success and error lists from the file
+    success_list = [s.strip() for s in contents[0].split(":")[1].split(",") if s.strip()]
+    error_list = [s.strip() for s in contents[1].split(":")[1].split(",") if s.strip()]
+    
+    # Add the button name to the appropriate list based on the status
+    if status == "SUCCESS" and button_name not in success_list:
+        success_list.append(button_name)
+    elif status == "ERROR" and button_name not in error_list:
+        error_list.append(button_name)
+    
+    # Write the updated lists back to the file
+    with open("server.txt", "w") as f:
+        f.write("Success: " + ", ".join(success_list) + "\n")
+        f.write("Error: " + ", ".join(error_list) + "\n")
