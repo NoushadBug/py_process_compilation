@@ -120,12 +120,13 @@ def run_WP2JPG():
 def delete_folder_contents():
     btn_name = data.btn_name['delete_contents']
     print("LOG:: Deleting folder contents...")
-    # Get folders_to_clear list from config.txt
+    # Get folders_to_clear and files_to_clear lists from config.txt
     folders_to_clear = get_config_value('foldersToClear').split(', ')
+    files_to_clear = get_config_value('filesToClear').split(', ')
 
-    # Loop through each folder
+    # Loop through each folder to delete its contents
     for folder in folders_to_clear:
-        print("INFO:: Deleting "+folder)
+        print("INFO:: Deleting contents of folder: " + folder)
 
         # Check if folder exists
         if not os.path.exists(folder):
@@ -140,17 +141,35 @@ def delete_folder_contents():
                     os.unlink(file_path)
                     print("LOG:: Deleted file: " + file_name + "\n")
                 except Exception as e:
-                    print("LOG:: Failed to delete: " + file_name + "\n")
+                    print("LOG:: Failed to delete file: " + file_name + "\n")
                     print("LOG:: Error message: " + str(e) + "\n")
 
+            # Loop through directories in folder and delete them
             for dir_name in dirs:
                 dir_path = os.path.join(root, dir_name)
                 try:
                     shutil.rmtree(dir_path)
                     print("LOG:: Deleted directory: " + dir_name + "\n")
                 except Exception as e:
-                    print("LOG:: Failed to delete: " + dir_name + "\n")
+                    print("LOG:: Failed to delete directory: " + dir_name + "\n")
                     print("LOG:: Error message: " + str(e) + "\n")
+
+    # Loop through each file to delete
+    for file_to_clear in files_to_clear:
+        print("INFO:: Deleting file: " + file_to_clear)
+
+        # Check if file exists
+        if not os.path.isfile(file_to_clear):
+            print("ERROR:: File does not exist\n")
+            continue
+
+        # Delete the file
+        try:
+            os.unlink(file_to_clear)
+            print("LOG:: Deleted file: " + file_to_clear + "\n")
+        except Exception as e:
+            print("LOG:: Failed to delete file: " + file_to_clear + "\n")
+            print("LOG:: Error message: " + str(e) + "\n")
 
     print("SUCCESS:: Task Completed.")
     setProcessStatus(btn_name, "SUCCESS")

@@ -8,6 +8,7 @@ lightroomDirectory= C:\Program Files\Adobe\Adobe Lightroom Classic\Lightroom.exe
 propertyDirectory= I:\streleases\automation\run.bat
 wp2jpgDirectory= C:\Program Files (x86)\Batch Word to JPG Converter\Word2JPG.exe
 foldersToClear= I:/streleases/automation/processed-images, I:/streleases/automation/output-releases, I:/streleases/automation/images, I:/Adobe Stock, I:/Extractor/extract_folder, I:/tempLRimport, I:/streleases/automation/Releases -JPG
+filesToClear= I:/extractor/output.csv
 
 
 
